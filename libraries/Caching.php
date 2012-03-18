@@ -156,7 +156,10 @@ class Caching
         // Clean given arguments to a 0-index array
         $arguments = array_values($arguments);
 
-        $cache_id = do_hash($property.$method.serialize($arguments), 'sha1');
+        $cache_id = $this->_adapter == 'file' ?
+            $property.DIRECTORY_SEPARATOR.do_hash($method.serialize($arguments), 'sha1') . '.cache'
+            :
+            do_hash($property.$method.serialize($arguments), 'sha1');
 
         // See if we have this cached or delete if $expires is negative
         if($expires >= 0)
